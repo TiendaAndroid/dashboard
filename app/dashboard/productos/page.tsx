@@ -14,6 +14,7 @@ import Image from "next/image";
 import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
 
 interface ProductData {
+  id: string;
   price: number;
   image: { url: string }[];
   color: string[];
@@ -28,6 +29,26 @@ interface ProductData {
 
 export default function Productos() {
   const [products, setProducts] = useState<ProductData[]>([]);
+
+  const handleDelete = async (productId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/products/${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        console.log("Producto eliminado correctamente");
+        window.location.reload();
+      } else {
+        console.error("Error al eliminar el producto");
+      }
+    } catch (error) {
+      console.error("Error al eliminar el producto", error);
+    }
+  };
 
   useEffect(() => {
     fetch("http://localhost:3000/api/products")
@@ -52,7 +73,7 @@ export default function Productos() {
           href={"/dashboard/productos/agregar"}
           className="bg-[#D5507C] text-center hover:bg-[#bf486f] py-4 rounded w-full font-bold text-white text-lg"
         >
-          Agregar Producto
+          Agregar producto
         </Link>
       </div>
       <div className="flex w-full bg-white rounded-xl ">
@@ -70,7 +91,7 @@ export default function Productos() {
                   Colores
                 </TableCell>
                 <TableCell className="font-bold text-white text-lg">
-                  Tallas
+                  Tipos
                 </TableCell>
                 <TableCell className="font-bold text-white text-lg">
                   Stock
@@ -90,22 +111,24 @@ export default function Productos() {
                     <Image
                       src={product.image[0].url}
                       alt={product.name}
-                      width={1280}
-                      height={1280}
-                      className="rounded-xl h-[100px] w-[100px]"
+                      width={1000}
+                      height={1000}
+                      className="rounded-xl h-[80px] w-[80px]"
                     />
                     <p>{product.name}</p>
                   </TableCell>
-                  <TableCell>{product.stock}</TableCell>
                   <TableCell>{product.price}</TableCell>
+                  <TableCell>{product.color}</TableCell>
                   <TableCell>{product.material}</TableCell>
                   <TableCell>{product.stock}</TableCell>
-                  <TableCell className="space-x-6 text-xl text-[#722c43] ">
+                  <TableCell className="space-x-6 text-xl text-[#722c43]">
                     <button>
-                      <FaTrashAlt />
+                      <FaTrashAlt onClick={() => handleDelete(product.id)} />
                     </button>
                     <button>
-                      <FaPencilAlt />
+                      <Link href={`/dashboard/productos/editar/${product.id}`}>
+                        <FaPencilAlt />
+                      </Link>
                     </button>
                   </TableCell>
                 </TableRow>

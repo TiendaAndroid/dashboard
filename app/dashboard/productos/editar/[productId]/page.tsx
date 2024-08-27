@@ -1,12 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MdOutlineDriveFolderUpload } from "react-icons/md";
 import axios from "axios";
 import Link from "next/link";
 import { FaLessThanEqual } from "react-icons/fa6";
 
-export default function Agregar() {
+interface ProductData {
+  id: string;
+  price: number;
+  image: { url: string }[];
+  color: string[];
+  name: string;
+  description: string;
+  discount: number;
+  material: string[];
+  size: string[]; // Asegura que los tamaños sean números
+  stock: number;
+  isActive: boolean;
+}
+
+export default function Agregar({ params }: { params: { productId: string } }) {
   const [images, setImages] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [selectedTipo, setTipo] = useState<string[]>([]);
@@ -17,12 +31,45 @@ export default function Agregar() {
   const [color, setColor] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [complete, setComplete] = useState<boolean>(false);
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [loading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
 
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+
+  const [products, setProducts] = useState<ProductData>();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3000/api/products/${params.productId}`
+        );
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, [params.productId]);
+
+  useEffect(() => {
+    if (products) {
+      setIsLoading(false);
+      setName(products.name);
+      setPrecio(products.price);
+      setDescuento(products.discount);
+      setCantidad(products.stock);
+      setColor(products.color[0]);
+      setDescripcion(products.description);
+      setSelectedSizes(products.size);
+      setTipo(products.material);
+      setImages(products.image.map((img) => img.url));
+    }
+  }, [products]);
 
   const toggleSize = (size: string) => {
     setSelectedSizes((prevSizes) =>
@@ -81,6 +128,8 @@ export default function Agregar() {
     setSelectedFiles(fileList.files);
   };
 
+  console.log(selectedFiles);
+
   const handleImageUpload = async () => {
     if (!selectedFiles) {
       setUploadStatus("Please select files to upload");
@@ -91,6 +140,8 @@ export default function Agregar() {
     Array.from(selectedFiles).forEach((file) => {
       formData.append("files", file);
     });
+
+    console.log(formData);
 
     try {
       const response = await fetch("http://localhost:3000/api/files/products", {
@@ -115,8 +166,8 @@ export default function Agregar() {
 
   const handleProductSubmit = async (imageUrls: string[]) => {
     console.log(imageUrls); // Asegúrate de que los URLs estén disponibles aquí
-    if(descuento == ''){
-      setDescuento(0)
+    if (descuento == "") {
+      setDescuento(0);
     }
     const productData = {
       price: parseFloat(precio as string),
@@ -131,17 +182,17 @@ export default function Agregar() {
       isActive: true,
     };
 
-    console.log(productData);
-    console.log("Subiendo producto");
-
     try {
-      const response = await fetch("http://localhost:3000/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productData),
-      });
+      const response = await fetch(
+        `http://localhost:3000/api/products/${params.productId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productData),
+        }
+      );
 
       console.log(response);
       if (response.ok) {
@@ -157,20 +208,28 @@ export default function Agregar() {
       setUploadStatus("Error uploading product data");
     }
   };
-  console.log(precio)
+  console.log(precio);
 
   const handleSubmit = async () => {
-    if (name.length == 0, precio == '', cantidad == '', color.length == 0, descripcion.length == 0) {
+    if (
+      (name.length == 0,
+      precio == "",
+      cantidad == "",
+      color.length == 0,
+      descripcion.length == 0)
+    ) {
       setError(true);
       return;
+    }
+    if (selectedFiles == null) {
+      handleProductSubmit(images);
     }
     setIsLoading(true);
     const imageUrls = await handleImageUpload(); // Espera la subida de imagen y obtén los URLs
     if (imageUrls) {
-      handleProductSubmit(imageUrls); // Pasa los URLs a handleProductSubmit
+           handleProductSubmit(imageUrls); // Pasa los URLs combinados a handleProductSubmit
     }
   };
-
   return (
     <main className="flex h-screen flex-col items-center p-8 bg-gray-200 mb-8">
       {loading && (
@@ -201,10 +260,12 @@ export default function Agregar() {
       {complete && (
         <div className="fixed inset-0 w-full h-full bg-[#c7c7c76c] z-50 flex justify-center items-center">
           <div className="flex p-8 bg-white flex-col space-y-8 text-center rounded-xl">
-            <h1 className="text-xl font-bold">Producto subido correctamente</h1>
+            <h1 className="text-xl font-bold">
+              Producto modificado correctamente
+            </h1>
             <div className="flex space-y-4 w-full flex-col text-center">
-              <p>El producto {name} se a subido correctamente</p>
-              <p>Para eliminar o modificar   el producto diríjase a</p>
+              <p>El producto {name} se a actualizado</p>
+              <p>Para eliminar o modificar el producto diríjase a</p>
               <Link
                 href={"/dashboard/productos"}
                 className="text-blue-500 hover:text-blue-700"
@@ -238,7 +299,9 @@ export default function Agregar() {
                 placeholder="Nombre del producto"
                 className="border-2 border-gray-400 p-3 rounded-lg w-full"
               />
-              {(error && name.length == 0) &&  <p className="text-red-400">Coloca un nombre para continua</p>}
+              {error && name.length == 0 && (
+                <p className="text-red-400">Coloca un nombre para continua</p>
+              )}
             </div>
             <div>
               <div className="flex flex-row w-full space-x-5  ">
@@ -255,7 +318,9 @@ export default function Agregar() {
                     placeholder="Precio del producto"
                     className="border-2 border-gray-400 p-3 rounded-lg w-full"
                   />
-                  {(error && precio == '') &&  <p className="text-red-400">Coloca un precio</p>}
+                  {error && precio == "" && (
+                    <p className="text-red-400">Coloca un precio</p>
+                  )}
                 </div>
                 <div className="w-1/2 space-y-3">
                   <p className="font-bold">Descuento</p>
@@ -288,7 +353,9 @@ export default function Agregar() {
                     placeholder="Stock disponible del producto"
                     className="border-2 border-gray-400 p-3 rounded-lg w-full"
                   />
-                  {(error && cantidad == 0) &&  <p className="text-red-400">Coloca el número de stock</p>}
+                  {error && cantidad == 0 && (
+                    <p className="text-red-400">Coloca el número de stock</p>
+                  )}
                 </div>
                 <div className="w-1/2 space-y-3">
                   <p className="font-bold">Color</p>
@@ -317,7 +384,9 @@ export default function Agregar() {
                   {size}
                 </button>
               ))}
-              {(error && selectedSizes.length == 0) &&  <p className="text-red-400">Coloca una talla</p>}
+              {error && selectedSizes.length == 0 && (
+                <p className="text-red-400">Coloca una talla</p>
+              )}
             </div>
             <div className="w-full space-y-3 space-x-3">
               <p className="font-bold">Tipo</p>
@@ -334,7 +403,9 @@ export default function Agregar() {
                   {tipo}
                 </button>
               ))}
-              {(error && selectedTipo.length == 0) &&  <p className="text-red-400">Coloca una tipo de toalla</p>}
+              {error && selectedTipo.length == 0 && (
+                <p className="text-red-400">Coloca una tipo de toalla</p>
+              )}
             </div>
             <div className="w-full space-y-3">
               <p className="font-bold">Descripción</p>
@@ -345,7 +416,9 @@ export default function Agregar() {
                 className="border-2 border-gray-400 p-3 rounded-lg w-full h-32"
                 style={{ overflow: "hidden" }}
               />
-              {(error && descripcion.length == 0) &&  <p className="text-red-400">Coloca una descripcion valida</p>}
+              {error && descripcion.length == 0 && (
+                <p className="text-red-400">Coloca una descripcion valida</p>
+              )}
             </div>
           </div>
           <div className="flex w-full md:w-1/2 bg-white rounded-xl p-5 flex-col space-y-4">
@@ -375,7 +448,9 @@ export default function Agregar() {
                   selecciona archivos
                 </label>
               </div>
-              {(error && selectedFiles == null) &&  <p className="text-red-400">Sube por lo menos una imágen</p>}
+              {error && selectedFiles == null && (
+                <p className="text-red-400">Sube por lo menos una imágen</p>
+              )}
               <div className="flex flex-wrap space-x-3 space-y-3">
                 {images.map((image, index) => (
                   <div key={index} className="relative">
