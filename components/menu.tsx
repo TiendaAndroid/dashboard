@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FaShoppingBag, FaUserFriends } from "react-icons/fa";
+import { FaShoppingBag, FaUser, FaUserFriends } from "react-icons/fa";
 import { MdSpaceDashboard } from "react-icons/md";
 import { PiNewspaperClippingFill } from "react-icons/pi";
 import { MdAutoGraph } from "react-icons/md";
@@ -29,10 +29,10 @@ const Menu = () => {
           <p>Productos</p>
         </Link>
 
-        <div className="flex flex-row items-center space-x-4  hover:bg-slate-100 w-full p-3 rounded-xl">
-          <FaUserFriends />
+        <Link href={"/dashboard/usuarios"} className="flex flex-row items-center space-x-4  hover:bg-slate-100 w-full p-3 rounded-xl">
+          <FaUser />
           <p>Usuarios</p>
-        </div>
+        </Link>
 
         <div className="flex flex-row items-center space-x-4  hover:bg-slate-100 w-full p-3 rounded-xl">
           <PiNewspaperClippingFill />

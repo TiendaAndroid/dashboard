@@ -15,6 +15,7 @@
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-charts": "^7.14.0",
     "@next/font": "^14.2.6",
+    "@react-map/mexico": "^1.0.5",
     "axios": "^1.7.5",
     "chart.js": "^4.4.4",
     "next": "14.2.6",
