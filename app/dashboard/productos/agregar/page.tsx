@@ -93,7 +93,7 @@ export default function Agregar() {
     });
 
     try {
-      const response = await fetch("http://localhost:3000/api/files/products", {
+      const response = await fetch("https://backend-tienda-production.up.railway.app/api/files/products", {
         method: "POST",
         body: formData,
       });
@@ -135,7 +135,7 @@ export default function Agregar() {
     console.log("Subiendo producto");
 
     try {
-      const response = await fetch("http://localhost:3000/api/products", {
+      const response = await fetch("https://backend-tienda-production.up.railway.app/api/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

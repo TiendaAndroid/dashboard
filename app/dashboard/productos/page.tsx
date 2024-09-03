@@ -51,7 +51,7 @@ export default function Productos() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/products")
+    fetch("https://backend-tienda-production.up.railway.app/api/products")
       .then((response) => response.json())
       .then((data) => {
         if (Array.isArray(data.data)) {
