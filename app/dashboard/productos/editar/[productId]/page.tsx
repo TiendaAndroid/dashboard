@@ -44,7 +44,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/products/${params.productId}`
+          `https://backend-tienda-production.up.railway.app/api/products/${params.productId}`
         );
         const data = await response.json();
         setProducts(data);
@@ -184,7 +184,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
 
     try {
       const response = await fetch(
-        `http://localhost:3000/api/products/${params.productId}`,
+        `https://backend-tienda-production.up.railway.app/api/products/${params.productId}`,
         {
           method: "PATCH",
           headers: {
