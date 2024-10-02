@@ -5,6 +5,7 @@ import { MdOutlineDriveFolderUpload } from "react-icons/md";
 import axios from "axios";
 import Link from "next/link";
 import { FaLessThanEqual } from "react-icons/fa6";
+import Image from "next/image";
 
 interface ProductData {
   id: string;
@@ -436,8 +437,10 @@ export default function Agregar({ params }: { params: { productId: string } }) {
               <div className="flex flex-wrap space-x-3 space-y-3">
                 {images.map((image, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
                       src={image}
+                      height={130}
+                      width={130}
                       alt={`uploaded ${index}`}
                       className="w-40 h-40 object-cover rounded-lg"
                     />

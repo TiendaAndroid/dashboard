@@ -29,17 +29,26 @@ export default function Usuarios() {
   const [offset, setOffset] = useState(0);
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState<string | null>(null);
   const [orders, setOrders] = useState<Orders[]>([]);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+    }
+  }, []);
+
+  useEffect(() => {
     const fetchOrders = async () => {
+      if (!token) return;
+
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders?offset=${offset}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Reemplaza `yourToken` con tu token real
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -56,7 +65,7 @@ export default function Usuarios() {
       }
     };
     fetchOrders();
-  }, [offset]);
+  }, [offset, token]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -137,7 +146,7 @@ export default function Usuarios() {
               isLoading={isLoading}
               loadingContent={<Spinner label="Cargando..." />}
             >
-              {orders.map((ordenes) => (
+              {orders.map((ordenes, index) => (
                 <TableRow
                   key={ordenes.id}
                   className="border-b-2 border-gray-100"
@@ -161,7 +170,7 @@ export default function Usuarios() {
                   <TableCell>{ordenes.estado}</TableCell>
                   <TableCell>
                     {ordenes.order_items.map((order) => (
-                      <p>{order.quantity + " " + order.product.name}</p>
+                      <p key={order.id}>{order.quantity + " " + order.product.name}</p>
                     ))}
                   </TableCell>
                 </TableRow>

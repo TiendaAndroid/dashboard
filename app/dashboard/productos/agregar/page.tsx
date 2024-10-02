@@ -5,6 +5,7 @@ import { MdOutlineDriveFolderUpload } from "react-icons/md";
 import axios from "axios";
 import Link from "next/link";
 import { FaLessThanEqual } from "react-icons/fa6";
+import Image from "next/image";
 
 export default function Agregar() {
   const [images, setImages] = useState<string[]>([]);
@@ -417,9 +418,11 @@ export default function Agregar() {
               <div className="flex flex-wrap space-x-3 space-y-3">
                 {images.map((image, index) => (
                   <div key={index} className="relative">
-                    <img
+                    <Image
                       src={image}
                       alt={`uploaded ${index}`}
+                      width={160}
+                      height={160}
                       className="w-40 h-40 object-cover rounded-lg"
                     />
                     <button

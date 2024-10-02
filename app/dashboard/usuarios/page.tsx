@@ -24,15 +24,25 @@ export default function Usuarios() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const token = localStorage.getItem("token");
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedToken = localStorage.getItem("token");
+      setToken(storedToken);
+    }
+  }, []);
+
   useEffect(() => {
     const fetchUsers = async () => {
+      if (!token) return;
+
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/private-roles`,
           {
             headers: {
-              Authorization: `Bearer ${token}`, // Reemplaza `yourToken` con tu token real
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -49,7 +59,7 @@ export default function Usuarios() {
     };
 
     fetchUsers();
-  }, []);
+  }, [token]);
 
   const handleSort = (column: string) => {
     if (sortColumn === column) {
@@ -67,13 +77,12 @@ export default function Usuarios() {
         {
           method: "PATCH",
           headers: {
-            Authorization: `Bearer ${token}`, // Reemplaza `yourToken` con tu token real
+            Authorization: `Bearer ${token}`,
           },
         }
       );
       if (response.ok) {
         console.log("Rol de admin actualizado correctamente");
-        // Actualiza la lista de usuarios después de cambiar el rol
         const updatedUsers = users.map((user) =>
           user.id === userId
             ? {
@@ -96,17 +105,16 @@ export default function Usuarios() {
   const handleUserToggle = async (userId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/auth/createUser/${userId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/createUser/${userId}`,
         {
           method: "PATCH",
           headers: {
-            Authorization: `Bearer ${token}`, // Reemplaza `yourToken` con tu token real
+            Authorization: `Bearer ${token}`,
           },
         }
       );
       if (response.ok) {
         console.log("Rol de admin actualizado correctamente");
-        // Actualiza la lista de usuarios después de cambiar el rol
         const updatedUsers = users.map((user) =>
           user.id === userId
             ? {
