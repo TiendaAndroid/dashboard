@@ -1,17 +1,32 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
 import Link from "next/link";
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Input,
+  Button,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Chip,
+  User,
+  Pagination,
+  Selection,
+  ChipProps,
+  SortDescriptor,
+  Spinner,
+} from "@nextui-org/react";
 import Image from "next/image";
-import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
+import { FaRegEdit } from "react-icons/fa";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { IoSearch } from "react-icons/io5";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 interface ProductData {
   id: string;
@@ -21,14 +36,21 @@ interface ProductData {
   name: string;
   description: string;
   discount: number;
-  material: string[];
-  size: string[]; // Asegura que los tamaños sean números
+  type: string[];
   stock: number;
   isActive: boolean;
 }
 
+
+
 export default function Productos() {
   const [products, setProducts] = useState<ProductData[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(10); // Ajusta el límite según tus necesidades
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const handleDelete = async (productId: string) => {
     try {
@@ -51,20 +73,40 @@ export default function Productos() {
   };
 
   useEffect(() => {
-    fetch("https://backend-tienda-production.up.railway.app/api/products")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          searchTerm
+            ? `http://localhost:3000/api/products/search/${searchTerm}`
+            : `http://localhost:3000/api/products?offset=${offset}&limit=${limit}`
+        );
+        const data = await response.json();
         if (Array.isArray(data.data)) {
           setProducts(data.data);
+          if (!searchTerm) {
+            setTotalPages(Math.ceil(data.totalResults / limit));
+          }
         } else {
           console.error("Data is not an array:", data);
         }
-      })
-      .catch((error) => console.error("Error fetching products:", error));
-  }, []);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [offset, limit, searchTerm]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setOffset(page - 1);
+  };
 
   return (
-    <main className="flex h-screen flex-col items-center p-8 bg-gray-200 space-y-8">
+    <main className="flex h-screen flex-col items-center p-8 space-y-8">
       <div className="flex w-full text-xl">
         <h1 className="font-bold">Lista de productos</h1>
       </div>
@@ -76,66 +118,95 @@ export default function Productos() {
           Agregar producto
         </Link>
       </div>
-      <div className="flex w-full bg-white rounded-xl ">
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead className="bg-[#D5507C] ">
-              <TableRow>
-                <TableCell className="font-bold text-white text-lg">
-                  Productos
-                </TableCell>
-                <TableCell className="font-bold text-white text-lg">
-                  Precio MNX
-                </TableCell>
-                <TableCell className="font-bold text-white text-lg">
-                  Colores
-                </TableCell>
-                <TableCell className="font-bold text-white text-lg">
-                  Tipos
-                </TableCell>
-                <TableCell className="font-bold text-white text-lg">
-                  Stock
-                </TableCell>
-                <TableCell className="font-bold text-white text-lg">
-                  Acciones
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {products.map((product) => (
+
+      <div className="flex w-full">
+        <div className="flex flex-col w-full bg-white rounded-xl p-5 mb-8 shadow-md">
+          <h2 className="text-xl font-bold mb-4">Lista de Productos</h2>
+          <div className="flex flex-row space-x-5 w-full">
+            <Input
+              type="text"
+              placeholder="Buscar por nombre"
+              value={searchTerm}
+              startContent={<IoSearch />}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setOffset(0); // Reset offset when search term changes
+                setCurrentPage(1); // Reset to first page when search term changes
+              }}
+              className="mb-4 "
+            />
+          </div>
+
+          <Table removeWrapper aria-label="Example static collection table">
+            <TableHeader className="text-3xl">
+              <TableColumn>IMAGEN</TableColumn>
+              <TableColumn>NOMBRE</TableColumn>
+              <TableColumn>TIPO </TableColumn>
+              <TableColumn>PRECIO </TableColumn>
+              <TableColumn>STOCK</TableColumn>
+              <TableColumn>ACCIONES</TableColumn>
+            </TableHeader>
+            <TableBody
+              isLoading={isLoading}
+              loadingContent={
+                <Spinner
+                  label="Cargando..."
+                  className="bg-white p-5 rounded-md"
+                />
+              }
+            >
+              {products.map((productos) => (
                 <TableRow
-                  key={product.name}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  key={productos.id}
+                  className="border-b-2 border-gray-100"
                 >
-                  <TableCell className="flex flex-row items-center space-x-5">
+                  <TableCell>
                     <Image
-                      src={product.image[0].url}
-                      alt={product.name}
-                      width={1000}
-                      height={1000}
-                      className="rounded-xl h-[80px] w-[80px]"
+                      src={productos.image[0].url}
+                      alt={productos.name}
+                      width={128}
+                      height={128}
+                      className="h-20 w-20"
                     />
-                    <p>{product.name}</p>
                   </TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.color}</TableCell>
-                  <TableCell>{product.material}</TableCell>
-                  <TableCell>{product.stock}</TableCell>
-                  <TableCell className="space-x-6 text-xl text-[#722c43]">
-                    <button>
-                      <FaTrashAlt onClick={() => handleDelete(product.id)} />
-                    </button>
-                    <button>
-                      <Link href={`/dashboard/productos/editar/${product.id}`}>
-                        <FaPencilAlt />
-                      </Link>
-                    </button>
+                  <TableCell className="font-bold">{productos.name}</TableCell>
+                  <TableCell>{productos.type}</TableCell>
+                  <TableCell>${productos.price}</TableCell>
+                  <TableCell>{productos.stock}</TableCell>
+                  <TableCell>
+                    <div className="space-x-5 ">
+                      <button className="text-xl  hover:text-primary p-3 rounded-lg">
+                        <Link
+                          href={`/dashboard/productos/editar/${productos.id}`}
+                        >
+                          <FaRegEdit />
+                        </Link>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(productos.id)}
+                        className="text-xl bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg"
+                      >
+                        <FaRegTrashAlt />
+                      </button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </TableContainer>
+          {!searchTerm && (
+            <div className="flex w-full justify-center pt-6">
+              <Pagination
+                showControls
+                total={totalPages}
+                initialPage={1}
+                color={"primary"}
+                page={currentPage}
+                onChange={handlePageChange}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );

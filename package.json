@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -15,9 +15,12 @@
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
     "@mui/x-charts": "^7.14.0",
     "@next/font": "^14.2.6",
+    "@nextui-org/react": "^2.4.6",
+    "@nextui-org/table": "^2.0.39",
     "@react-map/mexico": "^1.0.5",
     "axios": "^1.7.5",
     "chart.js": "^4.4.4",
+    "framer-motion": "^11.5.2",
     "next": "14.2.6",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",

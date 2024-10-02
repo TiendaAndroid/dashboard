@@ -14,8 +14,7 @@ interface ProductData {
   name: string;
   description: string;
   discount: number;
-  material: string[];
-  size: string[]; // Asegura que los tamaños sean números
+  type: string[];
   stock: number;
   isActive: boolean;
 }
@@ -65,8 +64,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
       setCantidad(products.stock);
       setColor(products.color[0]);
       setDescripcion(products.description);
-      setSelectedSizes(products.size);
-      setTipo(products.material);
+      setTipo(products.type);
       setImages(products.image.map((img) => img.url));
     }
   }, [products]);
@@ -176,8 +174,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
       name: name,
       description: descripcion,
       discount: parseFloat(descuento as string),
-      material: selectedTipo,
-      size: selectedSizes, // Asegura que los tamaños sean números
+      type: selectedTipo,
       stock: parseInt(cantidad as string, 10),
       isActive: true,
     };
@@ -231,7 +228,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
     }
   };
   return (
-    <main className="flex h-screen flex-col items-center p-8 bg-gray-200 mb-8">
+    <main className="flex h-screen flex-col items-center p-8 mb-8">
       {loading && (
         <div className="fixed inset-0 w-full h-full bg-[#c7c7c76c] z-50 flex justify-center items-center">
           <div className="flex p-8 bg-white flex-col space-y-8 text-center rounded-xl">
@@ -370,27 +367,12 @@ export default function Agregar({ params }: { params: { productId: string } }) {
               </div>
             </div>
             <div className="w-full space-y-3 space-x-3">
-              <p className="font-bold">Talla</p>
-              {["XS", "S", "M", "L", "XL"].map((size) => (
-                <button
-                  key={size}
-                  onClick={() => toggleSize(size)}
-                  className={`border-2 p-2 w-1/6 rounded-lg ${
-                    isSelected(size)
-                      ? "bg-[#D5507C] text-white"
-                      : "bg-white text-black"
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-              {error && selectedSizes.length == 0 && (
-                <p className="text-red-400">Coloca una talla</p>
-              )}
-            </div>
-            <div className="w-full space-y-3 space-x-3">
               <p className="font-bold">Tipo</p>
-              {["Regular", "Nocturna", "Teen"].map((tipo) => (
+              {["Toalla Regular",
+                "Toalla Nocturna",
+                "Toalla Teen",
+                "Pantiprotectores Diarios",
+                "Kits"].map((tipo) => (
                 <button
                   key={tipo}
                   onClick={() => toggleSizeTipo(tipo)}
@@ -476,7 +458,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
             onClick={handleSubmit}
             className="bg-[#D5507C] hover:bg-[#bf486f] py-4 rounded w-full font-bold text-white text-lg mb-8"
           >
-            Añadir producto
+            Actualizar producto
           </button>
         </div>
       </div>

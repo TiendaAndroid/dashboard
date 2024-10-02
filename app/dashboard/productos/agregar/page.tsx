@@ -8,7 +8,7 @@ import { FaLessThanEqual } from "react-icons/fa6";
 
 export default function Agregar() {
   const [images, setImages] = useState<string[]>([]);
-  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedColor, setSelectedColor] = useState<string[]>([]);
   const [selectedTipo, setTipo] = useState<string[]>([]);
   const [name, setName] = useState<string>("");
   const [precio, setPrecio] = useState<number | string>("");
@@ -24,15 +24,15 @@ export default function Agregar() {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
-  const toggleSize = (size: string) => {
-    setSelectedSizes((prevSizes) =>
-      prevSizes.includes(size)
-        ? prevSizes.filter((s) => s !== size)
-        : [...prevSizes, size]
+  const toggleColor = (size: string) => {
+    setSelectedColor((prevColor) =>
+      prevColor.includes(size)
+        ? prevColor.filter((s) => s !== size)
+        : [...prevColor, size]
     );
   };
 
-  const isSelected = (size: string) => selectedSizes.includes(size);
+  const isSelected = (size: string) => selectedColor.includes(size);
 
   const toggleSizeTipo = (tipo: string) => {
     setTipo((prevTipo) =>
@@ -93,10 +93,13 @@ export default function Agregar() {
     });
 
     try {
-      const response = await fetch("https://backend-tienda-production.up.railway.app/api/files/products", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://backend-tienda-production.up.railway.app/api/files/products",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -105,28 +108,31 @@ export default function Agregar() {
         return data.secureUrls; // Regresa los URLs de las imágenes
       } else {
         setUploadStatus("Failed to upload files");
+        setIsLoading(false);
+        console.log(error);
         return false; // Indicar falla
       }
     } catch (error) {
       setUploadStatus("Error uploading files");
+      setIsLoading(false);
+      console.log(error);
       return false; // Indicar falla
     }
   };
 
   const handleProductSubmit = async (imageUrls: string[]) => {
     console.log(imageUrls); // Asegúrate de que los URLs estén disponibles aquí
-    if(descuento == ''){
-      setDescuento(0)
+    if (descuento == "") {
+      setDescuento(0);
     }
     const productData = {
       price: parseFloat(precio as string),
       image: imageUrls, // Utiliza los URLs pasados como argumento
-      color: [color],
+      color: selectedColor,
       name: name,
       description: descripcion,
       discount: parseFloat(descuento as string),
-      material: selectedTipo,
-      size: selectedSizes, // Asegura que los tamaños sean números
+      type: selectedTipo,
       stock: parseInt(cantidad as string, 10),
       isActive: true,
     };
@@ -135,13 +141,16 @@ export default function Agregar() {
     console.log("Subiendo producto");
 
     try {
-      const response = await fetch("https://backend-tienda-production.up.railway.app/api/products", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productData),
-      });
+      const response = await fetch(
+        "https://backend-tienda-production.up.railway.app/api/products",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productData),
+        }
+      );
 
       console.log(response);
       if (response.ok) {
@@ -150,17 +159,26 @@ export default function Agregar() {
         setComplete(true);
       } else {
         setUploadStatus("Failed to upload product data");
+        setIsLoading(false);
+        console.log(error);
       }
-      console.log(uploadStatus);
     } catch (error) {
       console.log(error);
       setUploadStatus("Error uploading product data");
     }
   };
-  console.log(precio)
 
   const handleSubmit = async () => {
-    if (name.length == 0, precio == '', cantidad == '', color.length == 0, descripcion.length == 0) {
+    if (
+      (name.length == 0,
+      precio == "",
+      cantidad == "",
+      color.length == 0,
+      descripcion.length == 0,
+      selectedTipo.length == 0,
+      selectedFiles == null,
+      selectedColor.length == 0)
+    ) {
       setError(true);
       return;
     }
@@ -172,7 +190,7 @@ export default function Agregar() {
   };
 
   return (
-    <main className="flex h-screen flex-col items-center p-8 bg-gray-200 mb-8">
+    <main className="flex h-screen flex-col items-center p-8 mb-8">
       {loading && (
         <div className="fixed inset-0 w-full h-full bg-[#c7c7c76c] z-50 flex justify-center items-center">
           <div className="flex p-8 bg-white flex-col space-y-8 text-center rounded-xl">
@@ -204,7 +222,7 @@ export default function Agregar() {
             <h1 className="text-xl font-bold">Producto subido correctamente</h1>
             <div className="flex space-y-4 w-full flex-col text-center">
               <p>El producto {name} se a subido correctamente</p>
-              <p>Para eliminar o modificar   el producto diríjase a</p>
+              <p>Para eliminar o modificar el producto diríjase a</p>
               <Link
                 href={"/dashboard/productos"}
                 className="text-blue-500 hover:text-blue-700"
@@ -238,7 +256,9 @@ export default function Agregar() {
                 placeholder="Nombre del producto"
                 className="border-2 border-gray-400 p-3 rounded-lg w-full"
               />
-              {(error && name.length == 0) &&  <p className="text-red-400">Coloca un nombre para continua</p>}
+              {error && name.length == 0 && (
+                <p className="text-red-400">Coloca un nombre para continua</p>
+              )}
             </div>
             <div>
               <div className="flex flex-row w-full space-x-5  ">
@@ -255,7 +275,9 @@ export default function Agregar() {
                     placeholder="Precio del producto"
                     className="border-2 border-gray-400 p-3 rounded-lg w-full"
                   />
-                  {(error && precio == '') &&  <p className="text-red-400">Coloca un precio</p>}
+                  {error && precio == "" && (
+                    <p className="text-red-400">Coloca un precio</p>
+                  )}
                 </div>
                 <div className="w-1/2 space-y-3">
                   <p className="font-bold">Descuento</p>
@@ -288,44 +310,52 @@ export default function Agregar() {
                     placeholder="Stock disponible del producto"
                     className="border-2 border-gray-400 p-3 rounded-lg w-full"
                   />
-                  {(error && cantidad == 0) &&  <p className="text-red-400">Coloca el número de stock</p>}
-                </div>
-                <div className="w-1/2 space-y-3">
-                  <p className="font-bold">Color</p>
-                  <input
-                    type="text"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                    placeholder="Color del producto"
-                    className="border-2 border-gray-400 p-3 rounded-lg w-full"
-                  />
+                  {error && cantidad == 0 && (
+                    <p className="text-red-400">Coloca el número de stock</p>
+                  )}
                 </div>
               </div>
             </div>
             <div className="w-full space-y-3 space-x-3">
-              <p className="font-bold">Talla</p>
-              {["XS", "S", "M", "L", "XL"].map((size) => (
+              <p className="font-bold">Color</p>
+              {[
+                "Rojo",
+                "Rosa",
+                "Negro",
+                "Morado",
+                "Amarillo",
+                "Blanco",
+                "Azul",
+              ].map((color) => (
                 <button
-                  key={size}
-                  onClick={() => toggleSize(size)}
+                  key={color}
+                  onClick={() => toggleColor(color)}
                   className={`border-2 p-2 w-1/6 rounded-lg ${
-                    isSelected(size)
+                    isSelected(color)
                       ? "bg-[#D5507C] text-white"
                       : "bg-white text-black"
                   }`}
                 >
-                  {size}
+                  {color}
                 </button>
               ))}
-              {(error && selectedSizes.length == 0) &&  <p className="text-red-400">Coloca una talla</p>}
+              {error && selectedColor.length == 0 && (
+                <p className="text-red-400">Coloca una talla</p>
+              )}
             </div>
             <div className="w-full space-y-3 space-x-3">
               <p className="font-bold">Tipo</p>
-              {["Regular", "Nocturna", "Teen"].map((tipo) => (
+              {[
+                "Toalla Regular",
+                "Toalla Nocturna",
+                "Toalla Teen",
+                "Pantiprotectores Diarios",
+                "Kits",
+              ].map((tipo) => (
                 <button
                   key={tipo}
                   onClick={() => toggleSizeTipo(tipo)}
-                  className={`border-2 p-2 w-1/5 rounded-lg ${
+                  className={`border-2 p-2 w-2/5 rounded-lg ${
                     isSelectedTipo(tipo)
                       ? "bg-[#D5507C] text-white"
                       : "bg-white text-black"
@@ -334,7 +364,9 @@ export default function Agregar() {
                   {tipo}
                 </button>
               ))}
-              {(error && selectedTipo.length == 0) &&  <p className="text-red-400">Coloca una tipo de toalla</p>}
+              {error && selectedTipo.length == 0 && (
+                <p className="text-red-400">Coloca una tipo de toalla</p>
+              )}
             </div>
             <div className="w-full space-y-3">
               <p className="font-bold">Descripción</p>
@@ -345,7 +377,9 @@ export default function Agregar() {
                 className="border-2 border-gray-400 p-3 rounded-lg w-full h-32"
                 style={{ overflow: "hidden" }}
               />
-              {(error && descripcion.length == 0) &&  <p className="text-red-400">Coloca una descripcion valida</p>}
+              {error && descripcion.length == 0 && (
+                <p className="text-red-400">Coloca una descripcion valida</p>
+              )}
             </div>
           </div>
           <div className="flex w-full md:w-1/2 bg-white rounded-xl p-5 flex-col space-y-4">
@@ -375,7 +409,11 @@ export default function Agregar() {
                   selecciona archivos
                 </label>
               </div>
-              {(error && selectedFiles == null) &&  <p className="text-red-400">Sube por lo menos una imágen</p>}
+              {error && selectedFiles == null && (
+                <p className="text-red-400">
+                  Sube por lo menos una imágen que pese menos de 20 KB
+                </p>
+              )}
               <div className="flex flex-wrap space-x-3 space-y-3">
                 {images.map((image, index) => (
                   <div key={index} className="relative">
