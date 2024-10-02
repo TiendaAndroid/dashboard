@@ -94,7 +94,7 @@ export default function Agregar() {
 
     try {
       const response = await fetch(
-        "https://backend-tienda-production.up.railway.app/api/files/products",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/files/products`,
         {
           method: "POST",
           body: formData,
@@ -142,7 +142,7 @@ export default function Agregar() {
 
     try {
       const response = await fetch(
-        "https://backend-tienda-production.up.railway.app/api/products",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products`,
         {
           method: "POST",
           headers: {

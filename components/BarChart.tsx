@@ -17,14 +17,13 @@ const options = {
   },
 };
 const BarChart = () => {
-  const api = "http://localhost:3000/api";
 
   const [count, setCount] = useState<Number[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${api}/orders/weekly-sales`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/weekly-sales`);
         const data = await response.json();
         setCount(data);
       } catch (error) {

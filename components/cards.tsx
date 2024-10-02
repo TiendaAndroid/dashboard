@@ -15,12 +15,11 @@ const Card = () => {
   const [totalSales, setTotalSales] = useState(0);
   const [totalSaleProducts, setTotalSalesProducts] = useState(0);
   const [countProduct, setCountProduct] = useState(0);
-  const api = "http://localhost:3000/api";
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${api}/products/count`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/products/count`);
         const data = await response.json();
         setCount(data.totalSales);
       } catch (error) {
@@ -30,7 +29,7 @@ const Card = () => {
 
     const fetchProductsData = async () => {
       try {
-        const response = await fetch(`${api}/products/total`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/products/total`);
         const data = await response.json();
         setCountProduct(data.totalProducts);
       } catch (error) {
@@ -40,7 +39,7 @@ const Card = () => {
 
     const fetchOrdersData = async () => {
       try {
-        const response = await fetch(`${api}/orders/total`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/orders/total`);
         const data = await response.json();
         setTotalSales(data.totalSales);
         setTotalSalesProducts(data.productsSales);

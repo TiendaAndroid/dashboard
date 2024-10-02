@@ -43,7 +43,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `https://backend-tienda-production.up.railway.app/api/products/${params.productId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params.productId}`
         );
         const data = await response.json();
         setProducts(data);
@@ -142,7 +142,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
     console.log(formData);
 
     try {
-      const response = await fetch("http://localhost:3000/api/files/products", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/files/products`, {
         method: "POST",
         body: formData,
       });
@@ -181,7 +181,7 @@ export default function Agregar({ params }: { params: { productId: string } }) {
 
     try {
       const response = await fetch(
-        `https://backend-tienda-production.up.railway.app/api/products/${params.productId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params.productId}`,
         {
           method: "PATCH",
           headers: {

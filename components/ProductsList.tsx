@@ -3,7 +3,6 @@ import { ProductInterface } from "@/interfaces/Products";
 import { useEffect, useState } from "react";
 
 const ProductsList = () => {
-  const api = "http://localhost:3000/api";
 
   const [products, setProducts] = useState<ProductInterface[]>([]);
 
@@ -20,7 +19,7 @@ const ProductsList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${api}/products/top`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/products/top`);
         const data = await response.json();
         if (Array.isArray(data.topProducts)) {
           setProducts(data.topProducts);

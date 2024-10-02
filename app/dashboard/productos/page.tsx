@@ -55,7 +55,7 @@ export default function Productos() {
   const handleDelete = async (productId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/products/${productId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${productId}`,
         {
           method: "DELETE",
         }
@@ -78,8 +78,8 @@ export default function Productos() {
       try {
         const response = await fetch(
           searchTerm
-            ? `http://localhost:3000/api/products/search/${searchTerm}`
-            : `http://localhost:3000/api/products?offset=${offset}&limit=${limit}`
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/search/${searchTerm}`
+            : `${process.env.NEXT_PUBLIC_BACKEND_URL}/products?offset=${offset}&limit=${limit}`
         );
         const data = await response.json();
         if (Array.isArray(data.data)) {

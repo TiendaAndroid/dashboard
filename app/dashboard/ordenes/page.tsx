@@ -36,7 +36,7 @@ export default function Usuarios() {
     const fetchOrders = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/orders?offset=${offset}`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/orders?offset=${offset}`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Reemplaza `yourToken` con tu token real

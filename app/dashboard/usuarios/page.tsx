@@ -29,7 +29,7 @@ export default function Usuarios() {
     const fetchUsers = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3000/api/auth/private-roles`,
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/private-roles`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Reemplaza `yourToken` con tu token real
@@ -63,7 +63,7 @@ export default function Usuarios() {
   const handleAdminToggle = async (userId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/auth/createAdmin/${userId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/createAdmin/${userId}`,
         {
           method: "PATCH",
           headers: {
