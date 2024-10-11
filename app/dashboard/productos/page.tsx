@@ -78,8 +78,8 @@ export default function Productos() {
       try {
         const response = await fetch(
           searchTerm
-            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/search/${searchTerm}`
-            : `${process.env.NEXT_PUBLIC_BACKEND_URL}/products?offset=${offset}&limit=${limit}`
+            ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/search/all/${searchTerm}`
+            : `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/all?offset=${offset}&limit=${limit}`
         );
         const data = await response.json();
         if (Array.isArray(data.data)) {
