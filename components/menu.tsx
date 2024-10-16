@@ -82,13 +82,6 @@ const Menu = () => {
           </p>
           <p>Ordenes</p>
         </Link>
-
-        <div className="flex flex-row items-center space-x-4  hover:bg-slate-100 w-full p-3 rounded-xl">
-          <p className="text-2xl">
-            <MdOutlineLeaderboard />
-          </p>
-          <p>Datos</p>
-        </div>
       </div>
     </div>
   );

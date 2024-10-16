@@ -5,7 +5,7 @@ export interface ProductInterface {
   name: string;
   description: string;
   discount: number;
-  material: string[];
+  type: string[];
   size: string[];
   stock: number;
   sales: number;

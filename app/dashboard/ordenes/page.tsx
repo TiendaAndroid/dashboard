@@ -15,6 +15,7 @@ import {
   Pagination,
 } from "@nextui-org/react";
 import { Orders } from "@/interfaces/Orders";
+import Link from "next/link";
 
 export default function Usuarios() {
   const [estadoSeleccionado, setEstadoSeleccionado] = useState<string>("");
@@ -141,6 +142,10 @@ export default function Usuarios() {
                 ARTICULOS{" "}
                 {sortColumn === "paid" && (sortDirection === "asc" ? "↑" : "↓")}
               </TableColumn>
+              <TableColumn onClick={() => handleSort("paid")}>
+                ACCIONES{" "}
+                {sortColumn === "paid" && (sortDirection === "asc" ? "↑" : "↓")}
+              </TableColumn>
             </TableHeader>
             <TableBody
               isLoading={isLoading}
@@ -170,8 +175,18 @@ export default function Usuarios() {
                   <TableCell>{ordenes.estado}</TableCell>
                   <TableCell>
                     {ordenes.order_items.map((order) => (
-                      <p key={order.id}>{order.quantity + " " + order.product.name}</p>
+                      <p key={order.id}>
+                        {order.quantity + " " + order.product.name}
+                      </p>
                     ))}
+                  </TableCell>
+                  <TableCell>
+                    <Link
+                      href={`/dashboard/ordenes/${ordenes.id}`}
+                      className="bg-primary hover:bg-pink-600 text-white px-3 py-1 rounded-md"
+                    >
+                      Ver orden
+                    </Link>
                   </TableCell>
                 </TableRow>
               ))}

@@ -1,3 +1,5 @@
+import { Direction } from "./Direction";
+
 export interface User {
   email: string;
   name: string;
@@ -7,4 +9,5 @@ export interface User {
   isActive: boolean;
   role: string[];
   token: string;
+  direction: Direction[];
 }

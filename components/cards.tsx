@@ -69,7 +69,6 @@ const Card = () => {
             <p>Productos vendidos</p>
           </div>
           <div className="flex  text-blue-500 text-sm">
-            <p>+8% de ayer</p>
           </div>
         </div>
         <div className="flex bg-[#FFF4DE] py-3 px-5 rounded-lg w-1/4 flex-col space-y-2">
@@ -83,7 +82,6 @@ const Card = () => {
             <p>Ordenes totales</p>
           </div>
           <div className="flex  text-blue-500 text-sm">
-            <p>+8% de ayer</p>
           </div>
         </div>
         <div className="flex bg-[#DCFCE7] py-3 px-5 rounded-lg w-1/4 flex-col space-y-2">
@@ -102,7 +100,6 @@ const Card = () => {
             <p>Ventas totales</p>
           </div>
           <div className="flex  text-blue-500 text-sm">
-            <p>+8% de ayer</p>
           </div>
         </div>
         <div className="flex bg-[#F4E8FF] py-3 px-5 rounded-lg w-1/4 flex-col space-y-2">
@@ -116,7 +113,6 @@ const Card = () => {
             <p>Total de productos</p>
           </div>
           <div className="flex  text-blue-500 text-sm">
-            <p>+8% de ayer</p>
           </div>
         </div>
       </div>

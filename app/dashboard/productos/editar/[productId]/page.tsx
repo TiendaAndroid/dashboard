@@ -143,10 +143,13 @@ export default function Agregar({ params }: { params: { productId: string } }) {
     console.log(formData);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/files/products`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/files/products`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
@@ -181,6 +184,13 @@ export default function Agregar({ params }: { params: { productId: string } }) {
     };
 
     try {
+      console.log("Product Data:", productData);
+      console.log(
+        "Request URL:",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params.productId}`
+      );
+      console.log("Product Data:", productData);
+
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/products/${params.productId}`,
         {
@@ -192,22 +202,22 @@ export default function Agregar({ params }: { params: { productId: string } }) {
         }
       );
 
-      console.log(response);
+      console.log("Response:", response);
       if (response.ok) {
         setUploadStatus("Product uploaded successfully");
         setIsLoading(false);
         setComplete(true);
       } else {
+        const errorData = await response.json();
+        console.log("Error Data:", errorData);
         setUploadStatus("Failed to upload product data");
       }
       console.log(uploadStatus);
     } catch (error) {
-      console.log(error);
+      console.log("Catch Error:", error);
       setUploadStatus("Error uploading product data");
     }
   };
-  console.log(precio);
-
   const handleSubmit = async () => {
     if (
       (name.length == 0,
@@ -223,9 +233,9 @@ export default function Agregar({ params }: { params: { productId: string } }) {
       handleProductSubmit(images);
     }
     setIsLoading(true);
-    const imageUrls = await handleImageUpload(); // Espera la subida de imagen y obtén los URLs
+    const imageUrls = await handleImageUpload();
     if (imageUrls) {
-           handleProductSubmit(imageUrls); // Pasa los URLs combinados a handleProductSubmit
+      handleProductSubmit(imageUrls); 
     }
   };
   return (
@@ -369,15 +379,17 @@ export default function Agregar({ params }: { params: { productId: string } }) {
             </div>
             <div className="w-full space-y-3 space-x-3">
               <p className="font-bold">Tipo</p>
-              {["Toalla Regular",
+              {[
+                "Toalla Regular",
                 "Toalla Nocturna",
                 "Toalla Teen",
                 "Pantiprotectores Diarios",
-                "Kits"].map((tipo) => (
+                "Kits",
+              ].map((tipo) => (
                 <button
                   key={tipo}
                   onClick={() => toggleSizeTipo(tipo)}
-                  className={`border-2 p-2 w-1/5 rounded-lg ${
+                  className={`border-2 p-2 w-2/5 rounded-lg ${
                     isSelectedTipo(tipo)
                       ? "bg-[#D5507C] text-white"
                       : "bg-white text-black"

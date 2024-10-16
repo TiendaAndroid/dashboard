@@ -85,7 +85,7 @@ const ProductsList = () => {
                   <div className={` border-1 w-max px-2 py-1 rounded-md ${getColorLabel(
                         index
                       )}`}>
-                    {(data.sales * 100) / (data.stock + data.sales)}%
+                    {((data.sales * 100) / (data.stock + data.sales)).toFixed(2)}%
                   </div>
                 </td>
               </tr>
