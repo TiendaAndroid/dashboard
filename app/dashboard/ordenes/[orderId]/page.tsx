@@ -91,104 +91,106 @@ export default function Ordenes({ params }: { params: { orderId: string } }) {
       </div>
       <div className="flex w-full space-x-5 ">
         <div className="flex flex-col w-full bg-white rounded-xl p-5 mb-8 shadow-md">
-          <div className="w-full justify-between flex flex-row p-5">
-            <p className="font-bold">Orden #: {params.orderId}</p>
-            <p>{order?.status}</p>
-          </div>
-          <div>
-            <div className="flex flex-row">
-              <p className="font-bold">Cliente:</p>
-              <p className="ml-2">
-                {order?.user?.name} {order?.user?.lastName}
-              </p>
+          <div className="overflow-auto">
+            <div className="w-full justify-between flex flex-row p-5">
+              <p className="font-bold">Orden #: {params.orderId}</p>
+              <p>{order?.status}</p>
             </div>
+            <div>
+              <div className="flex flex-row">
+                <p className="font-bold">Cliente:</p>
+                <p className="ml-2">
+                  {order?.user?.name} {order?.user?.lastName}
+                </p>
+              </div>
 
-            <div className="flex flex-row">
-              <p className="font-bold">Correo:</p>
-              <p className="ml-2">{order?.user?.email}</p>
-            </div>
+              <div className="flex flex-row">
+                <p className="font-bold">Correo:</p>
+                <p className="ml-2">{order?.user?.email}</p>
+              </div>
 
-            <div className="flex flex-row">
-              <p className="font-bold">Total:</p>
-              <p className="ml-2"> $ {(total * 1.16).toFixed(2)}</p>
-            </div>
-            <div className="flex flex-row">
-              <p className="font-bold">Direccion:</p>
-            </div>
+              <div className="flex flex-row">
+                <p className="font-bold">Total:</p>
+                <p className="ml-2"> $ {(total * 1.16).toFixed(2)}</p>
+              </div>
+              <div className="flex flex-row">
+                <p className="font-bold">Direccion:</p>
+              </div>
 
-            <div className="flex flex-col ml-2">
-              <p>Calle: {order?.calle}</p>
-              <p>Numero: {order?.noExterior}</p>
-              <p>Colonia: {order?.colonia}</p>
-              <p>Municipio o alcaldía: {order?.municipio}</p>
-              <p>Estado: {order?.estado}</p>
+              <div className="flex flex-col ml-2">
+                <p>Calle: {order?.calle}</p>
+                <p>Numero: {order?.noExterior}</p>
+                <p>Colonia: {order?.colonia}</p>
+                <p>Municipio o alcaldía: {order?.municipio}</p>
+                <p>Estado: {order?.estado}</p>
+              </div>
             </div>
-          </div>
-          <div className="mt-5">
-            <div className="flex flex-row items-center space-x-4">
-              <p className="font-bold">Cambiar estado a:</p>
-              <select
-                className="border rounded-md p-2"
-                value={orderStatus}
-                onChange={(e) => setOrderStatus(e.target.value)}
-              >
-                <option value="">Seleccionar</option>
-                <option value="SEND">Enviado</option>
-                <option value="DELIVERED">Entregado</option>
-                <option value="CANCELLED">Cancelado</option>
-              </select>
-              <button
-                className="bg-[#D5507C] text-center hover:bg-[#bf486f] p-2 rounded font-bold text-white"
-                onClick={handleStatusChange}
-              >
-                Cambiar
-              </button>
-            </div>
-          </div>
-          <div className="mt-5 text-lg p-5">
-            <h1 className="font-bold">Artículos:</h1>
-          </div>
-          <Table removeWrapper aria-label="Example static collection table">
-            <TableHeader className="text-3xl">
-              <TableColumn>IMAGEN</TableColumn>
-              <TableColumn>NOMBRE</TableColumn>
-              <TableColumn>TIPO </TableColumn>
-              <TableColumn>PRECIO </TableColumn>
-              <TableColumn>STOCK</TableColumn>
-            </TableHeader>
-            <TableBody
-              isLoading={loading}
-              loadingContent={
-                <Spinner
-                  label="Cargando..."
-                  className="bg-white p-5 rounded-md"
-                />
-              }
-            >
-              {order?.order_items?.map((productos) => (
-                <TableRow
-                  key={productos.id}
-                  className="border-b-2 border-gray-100"
+            <div className="mt-5">
+              <div className="flex flex-row items-center space-x-4">
+                <p className="font-bold">Cambiar estado a:</p>
+                <select
+                  className="border rounded-md p-2"
+                  value={orderStatus}
+                  onChange={(e) => setOrderStatus(e.target.value)}
                 >
-                  <TableCell>
-                    <Image
-                      src={productos.product.image[0].url}
-                      alt={productos.product.name}
-                      width={128}
-                      height={128}
-                      className="h-20 w-20"
-                    />
-                  </TableCell>
-                  <TableCell className="font-bold">
-                    {productos.product.name}
-                  </TableCell>
-                  <TableCell>{productos.product.type}</TableCell>
-                  <TableCell>${productos.product.price}</TableCell>
-                  <TableCell>{productos.product.price}</TableCell>
-                </TableRow>
-              )) || []}
-            </TableBody>
-          </Table>
+                  <option value="">Seleccionar</option>
+                  <option value="SEND">Enviado</option>
+                  <option value="DELIVERED">Entregado</option>
+                  <option value="CANCELLED">Cancelado</option>
+                </select>
+                <button
+                  className="bg-[#D5507C] text-center hover:bg-[#bf486f] p-2 rounded font-bold text-white"
+                  onClick={handleStatusChange}
+                >
+                  Cambiar
+                </button>
+              </div>
+            </div>
+            <div className="mt-5 text-lg p-5">
+              <h1 className="font-bold">Artículos:</h1>
+            </div>
+            <Table removeWrapper aria-label="Example static collection table">
+              <TableHeader className="text-3xl">
+                <TableColumn>IMAGEN</TableColumn>
+                <TableColumn>NOMBRE</TableColumn>
+                <TableColumn>TIPO </TableColumn>
+                <TableColumn>PRECIO </TableColumn>
+                <TableColumn>STOCK</TableColumn>
+              </TableHeader>
+              <TableBody
+                isLoading={loading}
+                loadingContent={
+                  <Spinner
+                    label="Cargando..."
+                    className="bg-white p-5 rounded-md"
+                  />
+                }
+              >
+                {order?.order_items?.map((productos) => (
+                  <TableRow
+                    key={productos.id}
+                    className="border-b-2 border-gray-100"
+                  >
+                    <TableCell>
+                      <Image
+                        src={productos.product.image[0].url}
+                        alt={productos.product.name}
+                        width={128}
+                        height={128}
+                        className="h-20 w-20"
+                      />
+                    </TableCell>
+                    <TableCell className="font-bold">
+                      {productos.product.name}
+                    </TableCell>
+                    <TableCell>{productos.product.type}</TableCell>
+                    <TableCell>${productos.product.price}</TableCell>
+                    <TableCell>{productos.product.price}</TableCell>
+                  </TableRow>
+                )) || []}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </main>

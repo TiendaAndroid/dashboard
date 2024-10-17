@@ -331,7 +331,7 @@ export default function Agregar() {
                 <button
                   key={color}
                   onClick={() => toggleColor(color)}
-                  className={`border-2 p-2 w-1/6 rounded-lg ${
+                  className={`border-2 p-2 md:w-1/6 w-2/5 rounded-lg ${
                     isSelected(color)
                       ? "bg-[#D5507C] text-white"
                       : "bg-white text-black"
@@ -356,7 +356,7 @@ export default function Agregar() {
                 <button
                   key={tipo}
                   onClick={() => toggleSizeTipo(tipo)}
-                  className={`border-2 p-2 w-2/5 rounded-lg ${
+                  className={`border-2 p-2 md:w-2/5 w-3/4 rounded-lg ${
                     isSelectedTipo(tipo)
                       ? "bg-[#D5507C] text-white"
                       : "bg-white text-black"

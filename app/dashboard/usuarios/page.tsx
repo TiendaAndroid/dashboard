@@ -153,11 +153,11 @@ export default function Usuarios() {
         <h1 className="font-bold">Usuarios</h1>
       </div>
 
-      <div className="flex w-full space-x-5">
-        <div className="flex w-1/2 bg-white rounded-xl p-5 justify-center items-center shadow-md">
+      <div className="md:flex md:flex-row hidden flex-col w-full md:space-x-5 space-y-5">
+        <div className="flex md:w-1/2 w-full bg-white rounded-xl p-5 justify-center items-center shadow-md">
           <MapaMexico onSelectEstado={handleEstadoSelect} />
         </div>
-        <div className="flex flex-col w-1/2 bg-white rounded-xl shadow-md">
+        <div className="flex flex-col md:w-1/2 w-full bg-white rounded-xl shadow-md">
           <ClientByState estadoSeleccionado={estadoSeleccionado} />
         </div>
       </div>
@@ -171,6 +171,7 @@ export default function Usuarios() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="mb-4 p-2 border border-gray-300 rounded"
           />
+          <div className="overflow-x-auto">
           <Table removeWrapper aria-label="Example static collection table">
             <TableHeader className="text-3xl">
               <TableColumn onClick={() => handleSort("name")}>
@@ -235,6 +236,7 @@ export default function Usuarios() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </div>
       </div>
     </main>

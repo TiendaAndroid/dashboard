@@ -13,11 +13,11 @@ export default function Home() {
       <div className="flex w-full space-x-3">
         <Card />
       </div>
-      <div className="flex w-full space-x-5 mb-8">
-        <div className="flex w-1/2 bg-white rounded-xl p-5 justify-center items-center shadow-md">
+      <div className="flex w-full md:space-x-5 md:mb-8  md:flex-row flex-col space-y-5">
+        <div className="flex md:w-1/2 w-full bg-white rounded-xl p-5 justify-center items-center shadow-md">
           <BarChart />
         </div>
-        <div className="flex flex-col w-1/2 h-max bg-white rounded-md shadow-md">
+        <div className="flex flex-col md:w-1/2 w-full h-max bg-white rounded-md shadow-md">
           <ProductsList />
         </div>
       </div>

@@ -36,7 +36,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8">
       <div className="bg-white p-16 rounded-xl items-center flex flex-col space-y-5">
-        <h1 className="text-4xl font-bold">Bienvenido a Zazil</h1>
+        <h1 className="text-4xl font-bold text-center">Bienvenido a Zazil</h1>
         <Image
           src="/Zazil.jpeg"
           alt="Zazil Logo"
@@ -44,7 +44,7 @@ export default function Home() {
           height={1280}
           className="rounded-full m-5 h-[100px] w-[100px] object-contain"
         />
-        <p className="text-lg">Inicia sesión con tu cuenta de Administrador</p>
+        <p className="text-lg text-center">Inicia sesión con tu cuenta de Administrador</p>
         <form className="flex flex-col space-y-8 w-3/4" onSubmit={handleSubmit}>
           <input
             type="text"
@@ -68,7 +68,7 @@ export default function Home() {
           )}
           <button
             type="submit"
-            className="bg-blue-500 text-white p-2 rounded-lg"
+            className="bg-pink-500 text-white p-2 rounded-lg"
           >
             Iniciar sesión
           </button>

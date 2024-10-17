@@ -41,8 +41,6 @@ interface ProductData {
   isActive: boolean;
 }
 
-
-
 export default function Productos() {
   const [products, setProducts] = useState<ProductData[]>([]);
   const [offset, setOffset] = useState(0);
@@ -136,64 +134,67 @@ export default function Productos() {
               className="mb-4 "
             />
           </div>
-
-          <Table removeWrapper aria-label="Example static collection table">
-            <TableHeader className="text-3xl">
-              <TableColumn>IMAGEN</TableColumn>
-              <TableColumn>NOMBRE</TableColumn>
-              <TableColumn>TIPO </TableColumn>
-              <TableColumn>PRECIO </TableColumn>
-              <TableColumn>STOCK</TableColumn>
-              <TableColumn>ACCIONES</TableColumn>
-            </TableHeader>
-            <TableBody
-              isLoading={isLoading}
-              loadingContent={
-                <Spinner
-                  label="Cargando..."
-                  className="bg-white p-5 rounded-md"
-                />
-              }
-            >
-              {products.map((productos) => (
-                <TableRow
-                  key={productos.id}
-                  className="border-b-2 border-gray-100"
-                >
-                  <TableCell>
-                    <Image
-                      src={productos.image[0].url}
-                      alt={productos.name}
-                      width={128}
-                      height={128}
-                      className="h-20 w-20"
-                    />
-                  </TableCell>
-                  <TableCell className="font-bold">{productos.name}</TableCell>
-                  <TableCell>{productos.type}</TableCell>
-                  <TableCell>${productos.price}</TableCell>
-                  <TableCell>{productos.stock}</TableCell>
-                  <TableCell>
-                    <div className="space-x-5 ">
-                      <button className="text-xl  hover:text-primary p-3 rounded-lg">
-                        <Link
-                          href={`/dashboard/productos/editar/${productos.id}`}
+          <div className="overflow-x-auto">
+            <Table removeWrapper aria-label="Example static collection table">
+              <TableHeader className="text-3xl">
+                <TableColumn>IMAGEN</TableColumn>
+                <TableColumn>NOMBRE</TableColumn>
+                <TableColumn>TIPO </TableColumn>
+                <TableColumn>PRECIO </TableColumn>
+                <TableColumn>STOCK</TableColumn>
+                <TableColumn>ACCIONES</TableColumn>
+              </TableHeader>
+              <TableBody
+                isLoading={isLoading}
+                loadingContent={
+                  <Spinner
+                    label="Cargando..."
+                    className="bg-white p-5 rounded-md"
+                  />
+                }
+              >
+                {products.map((productos) => (
+                  <TableRow
+                    key={productos.id}
+                    className="border-b-2 border-gray-100"
+                  >
+                    <TableCell>
+                      <Image
+                        src={productos.image[0].url}
+                        alt={productos.name}
+                        width={128}
+                        height={128}
+                        className="h-20 w-20"
+                      />
+                    </TableCell>
+                    <TableCell className="font-bold">
+                      {productos.name}
+                    </TableCell>
+                    <TableCell>{productos.type}</TableCell>
+                    <TableCell>${productos.price}</TableCell>
+                    <TableCell>{productos.stock}</TableCell>
+                    <TableCell>
+                      <div className="space-x-5">
+                        <button className="text-xl  hover:text-primary p-3 rounded-lg">
+                          <Link
+                            href={`/dashboard/productos/editar/${productos.id}`}
+                          >
+                            <FaRegEdit />
+                          </Link>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(productos.id)}
+                          className="text-xl bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg"
                         >
-                          <FaRegEdit />
-                        </Link>
-                      </button>
-                      <button
-                        onClick={() => handleDelete(productos.id)}
-                        className="text-xl bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg"
-                      >
-                        <FaRegTrashAlt />
-                      </button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                          <FaRegTrashAlt />
+                        </button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
           {!searchTerm && (
             <div className="flex w-full justify-center pt-6">
               <Pagination

@@ -115,6 +115,7 @@ export default function Usuarios() {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="mb-4 p-2 border border-gray-300 rounded"
           />
+          <div className="overflow-x-auto">
           <Table removeWrapper aria-label="Example static collection table">
             <TableHeader className="text-3xl">
               <TableColumn onClick={() => handleSort("name")}>
@@ -192,6 +193,7 @@ export default function Usuarios() {
               ))}
             </TableBody>
           </Table>
+          </div>
           <div className="flex w-full justify-center pt-6">
             <Pagination
               showControls

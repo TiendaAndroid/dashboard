@@ -57,8 +57,8 @@ const Card = () => {
   return (
     <div className="flex flex-col  w-full bg-white p-5 space-y-5 rounded-md shadow-md">
       <p className="text-[#06004E] text-xl font-bold">Resumen de los datos</p>
-      <div className="flex flex-row space-x-4 w-full ">
-        <div className="flex bg-[#FFE2E6] py-3 px-5 rounded-lg w-1/4 flex-col space-y-2">
+      <div className="flex md:flex-row md:space-x-4 w-full flex-col space-y-5">
+        <div className="flex bg-[#FFE2E6] py-3 px-5 rounded-lg md:w-1/4 w-full flex-col space-y-2">
           <div className="text-white bg-[#FA587E] w-max p-3 rounded-full text-xl">
             <FaShoppingBag />
           </div>
@@ -71,7 +71,7 @@ const Card = () => {
           <div className="flex  text-blue-500 text-sm">
           </div>
         </div>
-        <div className="flex bg-[#FFF4DE] py-3 px-5 rounded-lg w-1/4 flex-col space-y-2">
+        <div className="flex bg-[#FFF4DE] py-3 px-5 rounded-lg md:w-1/4 w-full flex-col space-y-2">
           <div className="text-white bg-[#FD9577] w-max p-3 rounded-full text-xl">
             <IoDocumentText />
           </div>
@@ -84,7 +84,7 @@ const Card = () => {
           <div className="flex  text-blue-500 text-sm">
           </div>
         </div>
-        <div className="flex bg-[#DCFCE7] py-3 px-5 rounded-lg w-1/4 flex-col space-y-2">
+        <div className="flex bg-[#DCFCE7] py-3 px-5 rounded-lg md:w-1/4 w-full flex-col space-y-2">
           <div className="text-white bg-[#39D957] w-max p-3 rounded-full text-xl">
             <BsFileBarGraphFill />
           </div>
@@ -102,7 +102,7 @@ const Card = () => {
           <div className="flex  text-blue-500 text-sm">
           </div>
         </div>
-        <div className="flex bg-[#F4E8FF] py-3 px-5 rounded-lg w-1/4 flex-col space-y-2">
+        <div className="flex bg-[#F4E8FF] py-3 px-5 rounded-lg md:w-1/4 w-full flex-col space-y-2">
           <div className="text-white bg-[#BE86FF] w-max p-3 rounded-full text-xl">
             <FaShoppingBag />
           </div>
